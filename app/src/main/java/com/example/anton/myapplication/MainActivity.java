@@ -82,6 +82,7 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View v) {
                 camPreview.isAndroid = !camPreview.isAndroid;
+                ((ImageView) findViewById(R.id.imageView2)).setImageResource(camPreview.isAndroid ? R.drawable.ic_action_name : R.drawable.ic_c);
                 Log.e("MOD_CHANGE", "mode changed");
             }
         });
@@ -96,7 +97,11 @@ public class MainActivity extends Activity
             public void run() {
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bitmap);
                 long fps = 60000l / (System.currentTimeMillis() - lastUpdateTime);
-                ((TextView) findViewById(R.id.fps)).setText(Long.toString(fps));
+                TextView tv = ((TextView) findViewById(R.id.fps));
+                Long current = Long.parseLong(tv.getText().toString());
+                Long diff = (fps - current)/10;
+
+                tv.setText(Long.toString(diff + current));
                 lastUpdateTime = System.currentTimeMillis();
 
             }
