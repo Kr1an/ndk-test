@@ -52,8 +52,8 @@ public class MainActivity extends Activity
     private CameraPreview camPreview;
     private ImageView MyCameraPreview = null;
     private FrameLayout mainLayout;
-    private int PreviewSizeWidth = 200;
-    private int PreviewSizeHeight= 200;
+    private int PreviewSizeWidth = 400;
+    private int PreviewSizeHeight= 400;
     private int count = 0;
     private long lastUpdateTime = System.currentTimeMillis();
 
@@ -61,6 +61,7 @@ public class MainActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         //Set this APK Full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -112,5 +113,10 @@ public class MainActivity extends Activity
         if ( camPreview != null)
             camPreview.onPause();
         super.onPause();
+    }
+    public native void renderPlasma(Bitmap bitmap);
+
+    static {
+        System.loadLibrary("native-lib");
     }
 }

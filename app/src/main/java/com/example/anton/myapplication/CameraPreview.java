@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Created by anton on 11/3/17.
@@ -36,6 +37,8 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     public boolean isAndroid = true;
 
     Handler mHandler = new Handler(Looper.getMainLooper());
+
+
 
     public CameraPreview(int PreviewlayoutWidth, int PreviewlayoutHeight,
                          ImageView CameraPreview, MainActivity context)
@@ -62,15 +65,19 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
         yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
 
         byte[] bytes = out.toByteArray();
+
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
         Bitmap after;
         if (this.isAndroid) {
             after = darkenBitmap(bitmap.copy(bitmap.getConfig(), true));
         } else {
-            after = bitmap.copy(bitmap.getConfig(), true);
+            Bitmap tmp = bitmap.copy(bitmap.getConfig(), true);
+            _context.renderPlasma(tmp);
+            after = tmp.copy(tmp.getConfig(), true);
         }
+
         _context.changeImage(after);
-        // At preview mode, the frame data will push to here.
     }
     private Bitmap sepicEffect(Bitmap val) {
         Bitmap bitmap = val;
@@ -98,13 +105,11 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
                 int a = Color.alpha( pixel );
                 int r = Color.red( pixel );
                 int g = Color.green( pixel );
+
                 int b = Color.blue( pixel );
 
 
-                bitmap.setPixel(x, y, Color.argb( a,
-                        Math.max( (int)(r * 2), 0 ),
-                        Math.max( (int)(g * 2), 0 ),
-                        Math.max( (int)(b * 2), 0 ) ));
+                bitmap.setPixel(x, y, Color.argb( a, b, b, b));
             }
         }
         return bitmap;
